@@ -1,0 +1,1656 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="utf8">
+            <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+                <title>Hands-on! - code for koriyama</title>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+                        <style>
+                            html, body, .container { height: 100%; }
+                            body { padding-top: 70px; padding-bottom: 30px; }
+                            </style>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+                        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+                        <script>
+                            $(function () {
+                              // 郡山の適当な座標
+                              var lat = 37.4030903,
+                              lon = 140.3534281;
+                              
+                              var map = new OpenLayers.Map("map");
+                              map.addLayer(new OpenLayers.Layer.OSM());
+                              
+                              var markers = new OpenLayers.Layer.Markers("Markers");
+                              map.addLayer(markers);
+                              
+                              var lonlat = new OpenLayers.LonLat(lon, lat)
+                              .transform(
+                                         new OpenLayers.Projection("EPSG:4326"),
+                                         new OpenLayers.Projection("EPSG:900913")
+                                         );
+                              map.setCenter(lonlat, 15);
+                              
+                              (function renderSpotMarker (data) {
+                               var popup = null
+                               data.forEach(function (spot) {
+                                            // スポットの座標を指定
+                                            var lonlat = new OpenLayers.LonLat(spot.lon, spot.lat).transform(
+                                                                                                             new OpenLayers.Projection("EPSG:4326"),
+                                                                                                             new OpenLayers.Projection("EPSG:900913")
+                                                                                                             );
+                                            // 指定座標にマーカーを追加
+                                            var marker = new OpenLayers.Marker(lonlat);
+                                            
+                                            // マーカーがクリックされたら
+                                            marker.events.register('touchend', marker, function () {
+                                                                   // すでにポップアップが開いていたら閉じる
+                                                                   if (popup) {　map.removePopup(popup);　}
+                                                                   
+                                                                   // ポップアップを作成
+                                                                   popup = new OpenLayers.Popup(
+                                                                                                "spot-info",                  // クラス名
+                                                                                                lonlat,                       // 表示座標
+                                                                                                new OpenLayers.Size(200, 50), // 表示サイズ
+                                                                                                spot.name,                    // 表示コンテンツ
+                                                                                                true);
+                                                                   
+                                                                   // ポップアップを作成
+                                                                   map.addPopup(popup);
+                                                                   });
+                                            
+                                            // レイヤーにマーカーを追加
+                                            markers.addMarker(marker);
+                                            });
+                               }([
+                                  {
+                                  "id": 1,
+                                  "type": "飲食店",
+                                  "name": "BRUTAL KITCHEN　おぐろ",
+                                  "lat": "37.4030903",
+                                  "lon": "140.3534281",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7010575/"
+                                  },
+                                  {
+                                  "id": 2,
+                                  "type": "飲食店",
+                                  "name": "Cafe＆casuarl Dining　perch",
+                                  "lat": "37.4038975",
+                                  "lon": "140.3572028",
+                                  "website": "http://www.hotpepper.jp/strJ001008579/"
+                                  },
+                                  {
+                                  "id": 3,
+                                  "type": "衣料品",
+                                  "name": "D+ ARMS",
+                                  "lat": "37.4043436",
+                                  "lon": "140.3574768",
+                                  "website": "http://www.d-arms.jp/"
+                                  },
+                                  {
+                                  "id": 4,
+                                  "type": "美容室",
+                                  "name": "Hair Studio Drop",
+                                  "lat": "37.4028137",
+                                  "lon": "140.3533745",
+                                  "website": "http://beauty.hotpepper.jp/slnH000261076/"
+                                  },
+                                  {
+                                  "id": 5,
+                                  "type": "美容室",
+                                  "name": "Hair Space Ange",
+                                  "lat": "37.3995692",
+                                  "lon": "140.3547777",
+                                  "website": "http%3A%2F%2Fbeauty%2Ehotpepper%2Ejp%2FslnH000112119%3Fvos%3Devpahpb0210x0014922%26gclid%3DCjwKEAjwwJmhBRC56KOelNOXhxUSJAB%5Fw2uNEbLi6%5F7YhHC0kO4x7v4Eg69dbA%2DC2rHaX8foP3rYzRoCthLw%5FwcB"
+                                  },
+                                  {
+                                  "id": 6,
+                                  "type": "飲食店",
+                                  "name": "KRISPA マハル 郡山",
+                                  "lat": "37.4057332",
+                                  "lon": "140.3558551",
+                                  "website": "http://www.hotpepper.jp/strJ000748941/"
+                                  },
+                                  {
+                                  "id": 7,
+                                  "type": "インテリア",
+                                  "name": "LA-SI-C",
+                                  "lat": "37.4044643",
+                                  "lon": "140.3549607",
+                                  "website": "http://lasic.jp/"
+                                  },
+                                  {
+                                  "id": 8,
+                                  "type": "美容室",
+                                  "name": "Lily",
+                                  "lat": "37.403293",
+                                  "lon": "140.3557023",
+                                  "website": "http://www.fukulabo.net/shop/shop.shtml?s=3565"
+                                  },
+                                  {
+                                  "id": 9,
+                                  "type": "飲食店",
+                                  "name": "coffee＆donut　MAPLE",
+                                  "lat": "37.4063381",
+                                  "lon": "140.3547812",
+                                  "website": "https://www.facebook.com/pages/MAPLE-coffeedonut/322052961242393"
+                                  },
+                                  {
+                                  "id": 10,
+                                  "type": "飲食店",
+                                  "name": "Okara café 真名井(まない)",
+                                  "lat": "37.4048655",
+                                  "lon": "140.3552442",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7010608/"
+                                  },
+                                  {
+                                  "id": 11,
+                                  "type": "美容室",
+                                  "name": "美容室　Pose",
+                                  "lat": "37.4058236",
+                                  "lon": "140.3549257",
+                                  "website": "https%3A%2F%2Fplus%2Egoogle%2Ecom%2F114939031274414380410%2Fabout%3Fgl%3Djp%26hl%3Dja"
+                                  },
+                                  {
+                                  "id": 12,
+                                  "type": "衣料品",
+                                  "name": "REGAL SHOES",
+                                  "lat": "37.4059057",
+                                  "lon": "140.355928",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 13,
+                                  "type": "衣料品",
+                                  "name": "Retreat",
+                                  "lat": "37.4027848",
+                                  "lon": "140.3533233",
+                                  "website": "http://www.p-retreat.com/blog/"
+                                  },
+                                  {
+                                  "id": 14,
+                                  "type": "飲食店",
+                                  "name": "洋食屋カフェ　Ring Tree",
+                                  "lat": "37.4062559",
+                                  "lon": "140.3548033",
+                                  "website": "https%3A%2F%2Fplus%2Egoogle%2Ecom%2F114882508138449462708%2Fabout%3Fgl%3Djp%26hl%3Dja"
+                                  },
+                                  {
+                                  "id": 15,
+                                  "type": "衣料品",
+                                  "name": "SONIA",
+                                  "lat": "37.4018014",
+                                  "lon": "140.3576471",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 16,
+                                  "type": "衣料品",
+                                  "name": "Stylee",
+                                  "lat": "37.4017232",
+                                  "lon": "140.3557951",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 17,
+                                  "type": "美容室",
+                                  "name": "YOKOTA MENS-ESTY",
+                                  "lat": "37.4041809",
+                                  "lon": "140.357604",
+                                  "website": "http://nttbj.itp.ne.jp/0249454500/index.html"
+                                  },
+                                  {
+                                  "id": 18,
+                                  "type": "美容室",
+                                  "name": "able2",
+                                  "lat": "37.399297",
+                                  "lon": "140.3703086",
+                                  "website": "http://beauty.hotpepper.jp/slnH000131231/"
+                                  },
+                                  {
+                                  "id": 19,
+                                  "type": "衣料品",
+                                  "name": "an corp.",
+                                  "lat": "37.4057367",
+                                  "lon": "140.3559247",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 20,
+                                  "type": "飲食店",
+                                  "name": "cafe de cafe",
+                                  "lat": "37.4050252",
+                                  "lon": "140.3545139",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7001349/"
+                                  },
+                                  {
+                                  "id": 21,
+                                  "type": "飲食店",
+                                  "name": "カフェテラスバー四季",
+                                  "lat": "37.4057565",
+                                  "lon": "140.3546476",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7003718/"
+                                  },
+                                  {
+                                  "id": 22,
+                                  "type": "美容室",
+                                  "name": "cohiba",
+                                  "lat": "37.3967157",
+                                  "lon": "140.3717892",
+                                  "website": "http://www.its-mo.com/c/%E3%83%90%E3%83%BC%E3%83%90%E3%83%BC%E3%82%B3%E3%82%A4%E3%83%BC%E3%83%90/DIDX_DKE,6196075/"
+                                  },
+                                  {
+                                  "id": 23,
+                                  "type": "衣料品",
+                                  "name": "collection only deux",
+                                  "lat": "37.4032454",
+                                  "lon": "140.3557141",
+                                  "website": "http://www.fukulabo.net/shop/shop.shtml?s=3170"
+                                  },
+                                  {
+                                  "id": 24,
+                                  "type": "花屋",
+                                  "name": "floral shiki",
+                                  "lat": "37.4060453",
+                                  "lon": "140.3549125",
+                                  "website": "http://www.fukulabo.net/shop/shop.shtml?s=1196"
+                                  },
+                                  {
+                                  "id": 25,
+                                  "type": "カフェ",
+                                  "name": "formi ino cafe",
+                                  "lat": "37.4048557",
+                                  "lon": "140.3619596",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7001199/"
+                                  },
+                                  {
+                                  "id": 26,
+                                  "type": "美容室",
+                                  "name": "hair SPICE deux",
+                                  "lat": "37.4062114",
+                                  "lon": "140.3565564",
+                                  "website": "http://beauty.hotpepper.jp/slnH000042822/"
+                                  },
+                                  {
+                                  "id": 27,
+                                  "type": "居酒屋",
+                                  "name": "kuwano壱番街",
+                                  "lat": "37.4033307",
+                                  "lon": "140.354751",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 28,
+                                  "type": "飲食店",
+                                  "name": "modern dining popolat ポポラート",
+                                  "lat": "37.4061535",
+                                  "lon": "140.355898",
+                                  "website": "http://www.hotpepper.jp/strJ000980944/"
+                                  },
+                                  {
+                                  "id": 29,
+                                  "type": "衣料品",
+                                  "name": "moja※",
+                                  "lat": "37.4058552",
+                                  "lon": "140.3552062",
+                                  "website": "http://www.fukulabo.net/shop/shop.shtml?s=3982"
+                                  },
+                                  {
+                                  "id": 30,
+                                  "type": "衣料品",
+                                  "name": "natura",
+                                  "lat": "37.4049263",
+                                  "lon": "140.3543811",
+                                  "website": "http://www.rakuten.co.jp/shopnatura/"
+                                  },
+                                  {
+                                  "id": 31,
+                                  "type": "衣料品",
+                                  "name": "nep",
+                                  "lat": "37.4020593",
+                                  "lon": "140.3534961",
+                                  "website": "http://nepnepnep.shop-pro.jp/"
+                                  },
+                                  {
+                                  "id": 32,
+                                  "type": "衣料品",
+                                  "name": "North Rim",
+                                  "lat": "37.402196",
+                                  "lon": "140.3626515",
+                                  "website": "http://www.northrim.cc/"
+                                  },
+                                  {
+                                  "id": 33,
+                                  "type": "美容室",
+                                  "name": "prea",
+                                  "lat": "37.4049732",
+                                  "lon": "140.3545367",
+                                  "website": "http%3A%2F%2Fbeauty%2Ehotpepper%2Ejp%2FslnH000189741%2F%3Fvos%3Devpahpb0210x0014922%26gclid%3DCjwKEAjwwJmhBRC56KOelNOXhxUSJAB%5Fw2uN75%5FFi3UUOkye27th9f5ocrjpzQtYc%5F8mwlig0Bo0ZxoCptjw%5FwcB"
+                                  },
+                                  {
+                                  "id": 34,
+                                  "type": "レストランバー",
+                                  "name": "百足屋",
+                                  "lat": "37.4027994",
+                                  "lon": "140.361687",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 35,
+                                  "type": "飲食店",
+                                  "name": "salon de 懐古",
+                                  "lat": "37.4030894",
+                                  "lon": "140.3534525",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000941/"
+                                  },
+                                  {
+                                  "id": 36,
+                                  "type": "雑貨",
+                                  "name": "select shop an",
+                                  "lat": "37.4019398",
+                                  "lon": "140.3581418",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 37,
+                                  "type": "飲食店",
+                                  "name": "あらかぶ",
+                                  "lat": "37.4031297",
+                                  "lon": "140.3562182",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7009470/"
+                                  },
+                                  {
+                                  "id": 38,
+                                  "type": "美容室",
+                                  "name": "おしゃれ専科 ハーモニー",
+                                  "lat": "37.4063718",
+                                  "lon": "140.3547528",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 39,
+                                  "type": "飲食店",
+                                  "name": "お食事処 櫻ぐみ",
+                                  "lat": "37.4041209",
+                                  "lon": "140.3528919",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 40,
+                                  "type": "飲食店",
+                                  "name": "きくら家 まめ蔵",
+                                  "lat": "37.405049",
+                                  "lon": "140.3552157",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000424/"
+                                  },
+                                  {
+                                  "id": 41,
+                                  "type": "その他",
+                                  "name": "くまだリフォーム",
+                                  "lat": "37.4058329",
+                                  "lon": "140.3559427",
+                                  "website": "http://koriyama.welcome-fukushima.com/co/kumada-r/ 024-925-3799"
+                                  },
+                                  {
+                                  "id": 42,
+                                  "type": "専門店",
+                                  "name": "さろん・ド・えき",
+                                  "lat": "37.4044036",
+                                  "lon": "140.3554196",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 43,
+                                  "type": "居酒屋",
+                                  "name": "てのごい",
+                                  "lat": "37.3965026",
+                                  "lon": "140.3718321",
+                                  "website": "http://r.gnavi.co.jp/7m0yen330000/"
+                                  },
+                                  {
+                                  "id": 44,
+                                  "type": "居酒屋",
+                                  "name": "とりの蔵",
+                                  "lat": "37.4070329",
+                                  "lon": "140.3594807",
+                                  "website": "http://www.hotpepper.jp/strJ000035096/"
+                                  },
+                                  {
+                                  "id": 45,
+                                  "type": "居酒屋",
+                                  "name": "ぱたぱた家",
+                                  "lat": "37.4059729",
+                                  "lon": "140.356301",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7008183/"
+                                  },
+                                  {
+                                  "id": 46,
+                                  "type": "いろり炭火焼",
+                                  "name": "ひびき舞",
+                                  "lat": "37.4068725",
+                                  "lon": "140.3609241",
+                                  "website": "http://www.hibiki-fukushima.com/#!hibikimai/c1l3j"
+                                  },
+                                  {
+                                  "id": 47,
+                                  "type": "飲食店",
+                                  "name": "めん処成",
+                                  "lat": "37.4033436",
+                                  "lon": "140.3623948",
+                                  "website": "http://mendokoro-sei.com/"
+                                  },
+                                  {
+                                  "id": 48,
+                                  "type": "らーめん屋",
+                                  "name": "めん処 成",
+                                  "lat": "37.4033749",
+                                  "lon": "140.3622142",
+                                  "website": "http://mendokoro-sei.com/"
+                                  },
+                                  {
+                                  "id": 49,
+                                  "type": "飲食店",
+                                  "name": "やきとり よし丸",
+                                  "lat": "37.403253",
+                                  "lon": "140.3569515",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000323/"
+                                  },
+                                  {
+                                  "id": 50,
+                                  "type": "飲食店",
+                                  "name": "まこちゃん",
+                                  "lat": "37.4092241",
+                                  "lon": "140.3618665",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 51,
+                                  "type": "居酒屋",
+                                  "name": "やなぎ家",
+                                  "lat": "37.404525",
+                                  "lon": "140.3601596",
+                                  "website": "http://r.gnavi.co.jp/t319400/"
+                                  },
+                                  {
+                                  "id": 52,
+                                  "type": "飲食店",
+                                  "name": "ヨーグルト専門店モーニング",
+                                  "lat": "37.4058758",
+                                  "lon": "140.3553927",
+                                  "website": "http://www.mng.co.jp/"
+                                  },
+                                  {
+                                  "id": 53,
+                                  "type": "保育所",
+                                  "name": "わかたけ保育園",
+                                  "lat": "37.4012477",
+                                  "lon": "140.3550642",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 54,
+                                  "type": "飲食店",
+                                  "name": "キッチン らーめん はな巻",
+                                  "lat": "37.4017422",
+                                  "lon": "140.3581874",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7004266/"
+                                  },
+                                  {
+                                  "id": 55,
+                                  "type": "飲食店",
+                                  "name": "キッチン 杉の子",
+                                  "lat": "37.4055521",
+                                  "lon": "140.3570282",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 56,
+                                  "type": "飲食店",
+                                  "name": "Trattoria Cucina",
+                                  "lat": "37.4056274",
+                                  "lon": "140.3564271",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000060/"
+                                  },
+                                  {
+                                  "id": 57,
+                                  "type": "アパート",
+                                  "name": "サイバーパーク桑野",
+                                  "lat": "37.4043305",
+                                  "lon": "140.3534356",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 58,
+                                  "type": "その他（ショッピングモール）",
+                                  "name": "ザ モール",
+                                  "lat": "37.3987949",
+                                  "lon": "140.3710684",
+                                  "website": "http://www.seiyu.co.jp/shop/44"
+                                  },
+                                  {
+                                  "id": 59,
+                                  "type": "飲食店",
+                                  "name": "スパゲッティ専門の店 Champ",
+                                  "lat": "37.402728",
+                                  "lon": "140.3624986",
+                                  "website": "http://www.hotpepper.jp/strJ000300095/"
+                                  },
+                                  {
+                                  "id": 60,
+                                  "type": "パスタ屋",
+                                  "name": "champ",
+                                  "lat": "37.402728",
+                                  "lon": "140.3624986",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 61,
+                                  "type": "コンビニ",
+                                  "name": "セブンイレブン 郡山桑野２丁目店",
+                                  "lat": "37.4027007",
+                                  "lon": "140.3577225",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 62,
+                                  "type": "バス停",
+                                  "name": "バス亭 郡山女子大学",
+                                  "lat": "37.3995308",
+                                  "lon": "140.3544022",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 63,
+                                  "type": "バス停",
+                                  "name": "バス停 桑野三丁目",
+                                  "lat": "37.4068935",
+                                  "lon": "140.3534543",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 64,
+                                  "type": "飲食店",
+                                  "name": "パルク",
+                                  "lat": "37.4054984",
+                                  "lon": "140.3561277",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7011138/"
+                                  },
+                                  {
+                                  "id": 65,
+                                  "type": "コンビニ",
+                                  "name": "ファミリーマート桑野三丁目店",
+                                  "lat": "37.4062711",
+                                  "lon": "140.3568622",
+                                  "website": "http://www.family.co.jp/"
+                                  },
+                                  {
+                                  "id": 66,
+                                  "type": "BAR",
+                                  "name": "フォークソングBAR PENNY LANE",
+                                  "lat": "37.4045057",
+                                  "lon": "140.3601984",
+                                  "website": "http://pennylane2013.jp/"
+                                  },
+                                  {
+                                  "id": 67,
+                                  "type": "菓子店",
+                                  "name": "フルラージュ",
+                                  "lat": "37.4014584",
+                                  "lon": "140.3558715",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000799/"
+                                  },
+                                  {
+                                  "id": 68,
+                                  "type": "美容室",
+                                  "name": "ヘアーサロン くわの",
+                                  "lat": "37.4053691",
+                                  "lon": "140.3571734",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000476/"
+                                  },
+                                  {
+                                  "id": 69,
+                                  "type": "施設",
+                                  "name": "ホテルアルファーワン郡山",
+                                  "lat": "37.3991081",
+                                  "lon": "140.3700611",
+                                  "website": "http://www.alpha-1.co.jp/koriyama/"
+                                  },
+                                  {
+                                  "id": 70,
+                                  "type": "ポスト",
+                                  "name": "ポスト",
+                                  "lat": "37.3995862",
+                                  "lon": "140.3548206",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 71,
+                                  "type": "スーパー",
+                                  "name": "マルエー桑野店",
+                                  "lat": "37.404317",
+                                  "lon": "140.3550385",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 72,
+                                  "type": "マッサージ",
+                                  "name": "リラクゼーションスペース サロン＆カレッジ Fit",
+                                  "lat": "37.4016883",
+                                  "lon": "140.3556901",
+                                  "website": "http://rssc-fit.com/"
+                                  },
+                                  {
+                                  "id": 73,
+                                  "type": "その他（自転車ショップ）",
+                                  "name": "ワンズサイクル",
+                                  "lat": "37.3992063",
+                                  "lon": "140.367511",
+                                  "website": "http://www.daiyu8.co.jp/tenpo/tenpo_713.html"
+                                  },
+                                  {
+                                  "id": 74,
+                                  "type": "飲食店",
+                                  "name": "三浦屋 貝願亭",
+                                  "lat": "37.4018625",
+                                  "lon": "140.358166",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7003777/"
+                                  },
+                                  {
+                                  "id": 75,
+                                  "type": "居酒屋",
+                                  "name": "串吉",
+                                  "lat": "37.399814",
+                                  "lon": "140.3532587",
+                                  "website": "http://www.fukulabo.net/shop/shop.shtml?s=1102"
+                                  },
+                                  {
+                                  "id": 76,
+                                  "type": "その他（サロン）",
+                                  "name": "アロマテラピー＆オリジナルクラフトサロン五香(いつか)",
+                                  "lat": "37.4011109",
+                                  "lon": "140.3528424",
+                                  "website": "http://beauty.hotpepper.jp/kr/slnH000302453/"
+                                  },
+                                  {
+                                  "id": 77,
+                                  "type": "飲食店",
+                                  "name": "京香",
+                                  "lat": "37.3993019",
+                                  "lon": "140.3690325",
+                                  "website": "http://www.kyo-ka.jp/"
+                                  },
+                                  {
+                                  "id": 78,
+                                  "type": "病院",
+                                  "name": "佐藤歯科",
+                                  "lat": "37.4039024",
+                                  "lon": "140.3572732",
+                                  "website": "http://medical.yahoo.co.jp/hospital/e530ba5bfbcc29c6389606cbd377f794fdb77b2d/"
+                                  },
+                                  {
+                                  "id": 79,
+                                  "type": "近道",
+                                  "name": "内環へのアクセスに便利な十字路",
+                                  "lat": "37.4031036",
+                                  "lon": "140.3603303",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 80,
+                                  "type": "酒屋",
+                                  "name": "千石屋",
+                                  "lat": "37.4034792",
+                                  "lon": "140.3553411",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 81,
+                                  "type": "病院",
+                                  "name": "吉田接骨院",
+                                  "lat": "37.4018135",
+                                  "lon": "140.357737",
+                                  "website": "http://kenkou.c-kaz.jp/pg120.html"
+                                  },
+                                  {
+                                  "id": 82,
+                                  "type": "飲食店",
+                                  "name": "和café ろっきぃ茶庵",
+                                  "lat": "37.402667",
+                                  "lon": "140.3575171",
+                                  "website": "http://www.miru.co.jp/06/031.html"
+                                  },
+                                  {
+                                  "id": 83,
+                                  "type": "飲食店",
+                                  "name": "回転寿司とっぴー",
+                                  "lat": "37.4030857",
+                                  "lon": "140.362394",
+                                  "website": "http://www.toppii.jp/tenpo_fukushima.html#koriyama-asahi"
+                                  },
+                                  {
+                                  "id": 84,
+                                  "type": "回転寿し",
+                                  "name": "とっぴ～",
+                                  "lat": "37.4030857",
+                                  "lon": "140.362394",
+                                  "website": "http://www.toppii.jp/"
+                                  },
+                                  {
+                                  "id": 85,
+                                  "type": "名所",
+                                  "name": "大木",
+                                  "lat": "37.4048198",
+                                  "lon": "140.3545581",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 86,
+                                  "type": "居酒屋",
+                                  "name": "大正浪漫風居酒屋 ハイカラヤ",
+                                  "lat": "37.4033549",
+                                  "lon": "140.3577251",
+                                  "website": "http://www.fukulabo.net/shop/shop.shtml?s=3331"
+                                  },
+                                  {
+                                  "id": 87,
+                                  "type": "施設",
+                                  "name": "富岡町教育委員会 事務局",
+                                  "lat": "37.4022232",
+                                  "lon": "140.3575968",
+                                  "website": "http://www.tomioka-town.jp/about/guide.html"
+                                  },
+                                  {
+                                  "id": 88,
+                                  "type": "居酒屋",
+                                  "name": "寧々屋",
+                                  "lat": "37.4047774",
+                                  "lon": "140.3629388",
+                                  "website": "http://r.gnavi.co.jp/t043601/"
+                                  },
+                                  {
+                                  "id": 89,
+                                  "type": "居酒屋",
+                                  "name": "居酒屋 桃太郎",
+                                  "lat": "37.3993483",
+                                  "lon": "140.3643792",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7005429/"
+                                  },
+                                  {
+                                  "id": 90,
+                                  "type": "ハンコ",
+                                  "name": "工房オリーブ",
+                                  "lat": "37.4044024",
+                                  "lon": "140.3574782",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 91,
+                                  "type": "ふぐ、割烹・小料理",
+                                  "name": "弁慶",
+                                  "lat": "37.4053409",
+                                  "lon": "140.3608907",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7005482/"
+                                  },
+                                  {
+                                  "id": 92,
+                                  "type": "スーパー",
+                                  "name": "愛情館",
+                                  "lat": "37.4078815",
+                                  "lon": "140.3630732",
+                                  "website": "http://www.fs.zennoh.or.jp/cgi-bin/aizyokan.cgi"
+                                  },
+                                  {
+                                  "id": 93,
+                                  "type": "飲食店",
+                                  "name": "手しごと厨房がんがん丸",
+                                  "lat": "37.403035",
+                                  "lon": "140.3605282",
+                                  "website": "http://www.ganganmaru.jp/"
+                                  },
+                                  {
+                                  "id": 94,
+                                  "type": "マッサージ",
+                                  "name": "整骨滋養堂",
+                                  "lat": "37.4031778",
+                                  "lon": "140.353778",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 95,
+                                  "type": "その他（整体）",
+                                  "name": "日本療術師教育センター",
+                                  "lat": "37.3993788",
+                                  "lon": "140.3643256",
+                                  "website": "http://www.mapion.co.jp/phonebook/M09010/07203/0249919072-001/"
+                                  },
+                                  {
+                                  "id": 96,
+                                  "type": "飲食店",
+                                  "name": "春木屋",
+                                  "lat": "37.4051287",
+                                  "lon": "140.3552219",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000025/"
+                                  },
+                                  {
+                                  "id": 97,
+                                  "type": "居酒屋",
+                                  "name": "村さ来",
+                                  "lat": "37.4060731",
+                                  "lon": "140.357013",
+                                  "website": "http://www.g-taste.co.jp/fi/murasaki/"
+                                  },
+                                  {
+                                  "id": 98,
+                                  "type": "インテリアショップ",
+                                  "name": "TOKYO interior",
+                                  "lat": "37.4094558",
+                                  "lon": "140.361628",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 99,
+                                  "type": "電気屋",
+                                  "name": "東洋電設有限会社",
+                                  "lat": "37.4016195",
+                                  "lon": "140.3553781",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 100,
+                                  "type": "神社",
+                                  "name": "柏屋 萬寿神社",
+                                  "lat": "37.3998658",
+                                  "lon": "140.3622824",
+                                  "website": "http://www.usukawa.co.jp/jinjya/"
+                                  },
+                                  {
+                                  "id": 101,
+                                  "type": "菓子店",
+                                  "name": "柏屋",
+                                  "lat": "37.3958878",
+                                  "lon": "140.3675419",
+                                  "website": "http://www.usukawa.co.jp/"
+                                  },
+                                  {
+                                  "id": 102,
+                                  "type": "居酒屋",
+                                  "name": "桜んぼ",
+                                  "lat": "37.4043888",
+                                  "lon": "140.3601295",
+                                  "website": "http://r.gnavi.co.jp/4wp9me3g0000/"
+                                  },
+                                  {
+                                  "id": 103,
+                                  "type": "飲食店",
+                                  "name": "正月屋",
+                                  "lat": "37.4051094",
+                                  "lon": "140.3565962",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000026/"
+                                  },
+                                  {
+                                  "id": 104,
+                                  "type": "食品店",
+                                  "name": "自然食なごみ",
+                                  "lat": "37.4036551",
+                                  "lon": "140.3595007",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 105,
+                                  "type": "飲食店",
+                                  "name": "上杉",
+                                  "lat": "37.401533",
+                                  "lon": "140.358223",
+                                  "website": "http://www.hotpepper.jp/strJ000650314/"
+                                  },
+                                  {
+                                  "id": 106,
+                                  "type": "飲食店",
+                                  "name": "牛角 郡山朝日店",
+                                  "lat": "37.4059813",
+                                  "lon": "140.3566005",
+                                  "website": "http://www.gyukaku.ne.jp/"
+                                  },
+                                  {
+                                  "id": 107,
+                                  "type": "焼肉店",
+                                  "name": "牛豊　",
+                                  "lat": "37.409237",
+                                  "lon": "140.362132",
+                                  "website": "http://www.gyuhou.jp/"
+                                  },
+                                  {
+                                  "id": 108,
+                                  "type": "飲食店",
+                                  "name": "王瑠舞亭",
+                                  "lat": "37.4061518",
+                                  "lon": "140.3558336",
+                                  "website": "http://www.regalshoes.jp/shoplist/detail.html?sid=32904f3c8a310ccb3"
+                                  },
+                                  {
+                                  "id": 109,
+                                  "type": "飲食店",
+                                  "name": "珈琲 円",
+                                  "lat": "37.4030189",
+                                  "lon": "140.3554478",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7001416/"
+                                  },
+                                  {
+                                  "id": 110,
+                                  "type": "美容室",
+                                  "name": "理容いすず",
+                                  "lat": "37.3992954",
+                                  "lon": "140.364768",
+                                  "website": "http://www.naviiz.com/gen_riyoushitsu/shop_16715/"
+                                  },
+                                  {
+                                  "id": 111,
+                                  "type": "飲食店",
+                                  "name": "福ケッチァーノ",
+                                  "lat": "37.3998005",
+                                  "lon": "140.3621362",
+                                  "website": "http://fukuchecciano.jp/"
+                                  },
+                                  {
+                                  "id": 112,
+                                  "type": "美容室",
+                                  "name": "美容室ATELIER A,s",
+                                  "lat": "37.406434",
+                                  "lon": "140.3559396",
+                                  "website": "http://www.mapion.co.jp/phonebook/M09001/07203/0249392567-001/"
+                                  },
+                                  {
+                                  "id": 113,
+                                  "type": "自販機",
+                                  "name": "自販機 by North Rim",
+                                  "lat": "37.4022374",
+                                  "lon": "140.3626921",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 114,
+                                  "type": "自販機",
+                                  "name": "自販機byとっぴー",
+                                  "lat": "37.4031186",
+                                  "lon": "140.3624536",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 115,
+                                  "type": "自販機",
+                                  "name": "自販機byアマノコーポレーションビル",
+                                  "lat": "37.4040201",
+                                  "lon": "140.3612789",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 116,
+                                  "type": "自販機",
+                                  "name": "自販機byフラッツちゃちゃ2",
+                                  "lat": "37.4022342",
+                                  "lon": "140.3612822",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 117,
+                                  "type": "自販機",
+                                  "name": "自販機by郡山観光タクシーのりば駐車場",
+                                  "lat": "37.403338",
+                                  "lon": "140.3602445",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 118,
+                                  "type": "飲食店",
+                                  "name": "菜々家",
+                                  "lat": "37.4012138",
+                                  "lon": "140.3629871",
+                                  "website": "http://www.na-na-ya.jp/"
+                                  },
+                                  {
+                                  "id": 119,
+                                  "type": "飲食店",
+                                  "name": "蕎屋",
+                                  "lat": "37.4049398",
+                                  "lon": "140.3565822",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000090/"
+                                  },
+                                  {
+                                  "id": 120,
+                                  "type": "その他（ハンコ屋さん）",
+                                  "name": "街のはんこ屋さん",
+                                  "lat": "37.4008566",
+                                  "lon": "140.352957",
+                                  "website": "http://www.hankowa.jp/mhk.html"
+                                  },
+                                  {
+                                  "id": 121,
+                                  "type": "畑",
+                                  "name": "街の中の畑",
+                                  "lat": "37.3999731",
+                                  "lon": "140.3615067",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 122,
+                                  "type": "飲食店",
+                                  "name": "郡山トンチキ亭",
+                                  "lat": "37.405445",
+                                  "lon": "140.3558218",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7001241/"
+                                  },
+                                  {
+                                  "id": 123,
+                                  "type": "剣道具店",
+                                  "name": "郡山剣道具店",
+                                  "lat": "37.4017742",
+                                  "lon": "140.3561636",
+                                  "website": "http://k-kendogu.urdr.weblife.me/"
+                                  },
+                                  {
+                                  "id": 124,
+                                  "type": "駐車場",
+                                  "name": "郡山観光タクシー乗り場",
+                                  "lat": "37.4033128",
+                                  "lon": "140.3603938",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 125,
+                                  "type": "施設",
+                                  "name": "郡山長者郵便局",
+                                  "lat": "37.3991853",
+                                  "lon": "140.3704925",
+                                  "website": "http://map.japanpost.jp/pc/syousai.php?id=300182271000"
+                                  },
+                                  {
+                                  "id": 126,
+                                  "type": "施設",
+                                  "name": "郷さくら美術館",
+                                  "lat": "37.3991942",
+                                  "lon": "140.3665156",
+                                  "website": "http://www.satosakura.jp/koriyama/"
+                                  },
+                                  {
+                                  "id": 127,
+                                  "type": "居酒屋",
+                                  "name": "酒盃 壱久",
+                                  "lat": "37.4057446",
+                                  "lon": "140.3571128",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7001405/"
+                                  },
+                                  {
+                                  "id": 128,
+                                  "type": "飲食店",
+                                  "name": "開成館",
+                                  "lat": "37.4050667",
+                                  "lon": "140.3556127",
+                                  "website": "http://www5b.biglobe.ne.jp/~udafct/"
+                                  },
+                                  {
+                                  "id": 129,
+                                  "type": "居酒屋",
+                                  "name": "雪桜",
+                                  "lat": "37.3992615",
+                                  "lon": "140.3700451",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7005343/"
+                                  },
+                                  {
+                                  "id": 130,
+                                  "type": "飲食店",
+                                  "name": "青山製麺",
+                                  "lat": "37.4030332",
+                                  "lon": "140.3530715",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7010583/"
+                                  },
+                                  {
+                                  "id": 131,
+                                  "type": "飲食店",
+                                  "name": "韓流 こり家",
+                                  "lat": "37.4059064",
+                                  "lon": "140.3570392",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7002869/"
+                                  },
+                                  {
+                                  "id": 132,
+                                  "type": "飲食店",
+                                  "name": "食彩 にじ",
+                                  "lat": "37.4061549",
+                                  "lon": "140.3559666",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7007596/"
+                                  },
+                                  {
+                                  "id": 133,
+                                  "type": "病院",
+                                  "name": "高松小児科医院",
+                                  "lat": "37.4067009",
+                                  "lon": "140.3528041",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 134,
+                                  "type": "飲食店",
+                                  "name": "鮨 来多老",
+                                  "lat": "37.3998419",
+                                  "lon": "140.3539515",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7007324/"
+                                  },
+                                  {
+                                  "id": 135,
+                                  "type": "飲食店",
+                                  "name": "鮨待夢",
+                                  "lat": "37.4033571",
+                                  "lon": "140.3556967",
+                                  "website": "http://www.hotpepper.jp/strJ000299423/"
+                                  },
+                                  {
+                                  "id": 136,
+                                  "type": "専門店",
+                                  "name": "鮮魚 魚仁",
+                                  "lat": "37.404983",
+                                  "lon": "140.3552227",
+                                  "website": "http://navifukushima.com/024-922-2391/"
+                                  },
+                                  {
+                                  "id": 137,
+                                  "type": "雑貨",
+                                  "name": 360,
+                                  "lat": "37.4027763",
+                                  "lon": "140.3532911",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 138,
+                                  "type": "病院",
+                                  "name": "ぬかざわ歯科医院",
+                                  "lat": "37.403183",
+                                  "lon": "140.355385",
+                                  "website": "http://www.nuka-dc.com/"
+                                  },
+                                  {
+                                  "id": 139,
+                                  "type": "病院",
+                                  "name": "芦名接骨医院",
+                                  "lat": "37.404927",
+                                  "lon": "140.354991",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 140,
+                                  "type": "飲食店",
+                                  "name": "ハワイアンダイニング Bar Lealoa",
+                                  "lat": "37.405174",
+                                  "lon": "140.354399",
+                                  "website": "http://tcc-project.com/lealoa.html"
+                                  },
+                                  {
+                                  "id": 141,
+                                  "type": "美容室",
+                                  "name": "Atelie BB",
+                                  "lat": "37.405223",
+                                  "lon": "140.354013",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 142,
+                                  "type": "ホームセンター",
+                                  "name": "KenDEPO",
+                                  "lat": "37.406292",
+                                  "lon": "140.354194",
+                                  "website": "http://www.kendepot-pro.jp/shop/store/16"
+                                  },
+                                  {
+                                  "id": 143,
+                                  "type": "衣料品",
+                                  "name": "synthemesc+",
+                                  "lat": "37.406813",
+                                  "lon": "140.352568",
+                                  "website": "http://www.synthemesc-plus.com/"
+                                  },
+                                  {
+                                  "id": 144,
+                                  "type": "美容室",
+                                  "name": "MARO",
+                                  "lat": "37.406788",
+                                  "lon": "140.352525",
+                                  "website": "http://beauty.hotpepper.jp/slnH000122222/"
+                                  },
+                                  {
+                                  "id": 145,
+                                  "type": "衣料品",
+                                  "name": "USED CLOTHING WAFERS",
+                                  "lat": "37.406775",
+                                  "lon": "140.352466",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 146,
+                                  "type": "飲食店",
+                                  "name": "くわのん家",
+                                  "lat": "37.406302",
+                                  "lon": "140.352742",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7011212/dtlrvwlst/6041163/"
+                                  },
+                                  {
+                                  "id": 147,
+                                  "type": "居酒屋",
+                                  "name": "のみくい処　安兵衛",
+                                  "lat": "37.405228",
+                                  "lon": "140.352439",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7005121/"
+                                  },
+                                  {
+                                  "id": 148,
+                                  "type": "美容室",
+                                  "name": "Bonito hair",
+                                  "lat": "",
+                                  "lon": "",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 149,
+                                  "type": "衣料品",
+                                  "name": "わかなの家",
+                                  "lat": "",
+                                  "lon": "",
+                                  "website": "http://itp.ne.jp/shop/KN0700060700055452/"
+                                  },
+                                  {
+                                  "id": 150,
+                                  "type": "美容室",
+                                  "name": "S・1058",
+                                  "lat": "",
+                                  "lon": "",
+                                  "website": "http://www.naviiz.com/gen_riyoushitsu/shop_16807/"
+                                  },
+                                  {
+                                  "id": 151,
+                                  "type": "美容室",
+                                  "name": "Lapin",
+                                  "lat": "",
+                                  "lon": "",
+                                  "website": "http://www.gurutto-koriyama.com/detail/index_206.html"
+                                  },
+                                  {
+                                  "id": 152,
+                                  "type": "自販機",
+                                  "name": "自販機ｂｙノースランド",
+                                  "lat": "37.399774",
+                                  "lon": "140.361227",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 153,
+                                  "type": "青空マルシェ",
+                                  "name": "開成マルシェ",
+                                  "lat": "37.40001",
+                                  "lon": "140.362141",
+                                  "website": "https://www.facebook.com/caan.jp"
+                                  },
+                                  {
+                                  "id": 154,
+                                  "type": "衣料品",
+                                  "name": "LA STYLE Wannabe",
+                                  "lat": "37.39938851",
+                                  "lon": "140.3634269",
+                                  "website": "http://wannabe-7sense.shop-pro.jp/"
+                                  },
+                                  {
+                                  "id": 155,
+                                  "type": "飲食店",
+                                  "name": "沖縄ダイニング　「な美ら」",
+                                  "lat": "37.39890055",
+                                  "lon": "140.3634082",
+                                  "website": "http://www.emikaji.com/"
+                                  },
+                                  {
+                                  "id": 156,
+                                  "type": "その他（整体）",
+                                  "name": "ちはらカイロオフィス　こおりやま整体院",
+                                  "lat": "37.39842325",
+                                  "lon": "140.3633948",
+                                  "website": "http://koriyamaseitai.com/"
+                                  },
+                                  {
+                                  "id": 157,
+                                  "type": "飲食店",
+                                  "name": "ラーメンくまごろう",
+                                  "lat": "37.39832736",
+                                  "lon": "140.3633036",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7006222/"
+                                  },
+                                  {
+                                  "id": 158,
+                                  "type": "飲食店",
+                                  "name": "ミオ・パスタ",
+                                  "lat": "37.39832736",
+                                  "lon": "140.3633036",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000960/"
+                                  },
+                                  {
+                                  "id": 159,
+                                  "type": "病院",
+                                  "name": "永山歯科クリニック",
+                                  "lat": "37.39827622",
+                                  "lon": "140.3646634",
+                                  "website": "http://www.fukushima-doctors.jp/detail/index_687.html"
+                                  },
+                                  {
+                                  "id": 160,
+                                  "type": "飲食店",
+                                  "name": "ラーメン店",
+                                  "lat": "37.39818992",
+                                  "lon": "140.3654654",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 161,
+                                  "type": "美容室",
+                                  "name": "Eme",
+                                  "lat": "37.3982091",
+                                  "lon": "140.3656143",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 162,
+                                  "type": "その他（商店）",
+                                  "name": "こいせや商店",
+                                  "lat": "37.39569041",
+                                  "lon": "140.3698924",
+                                  "website": "http://www.ko-cci.or.jp/k_bank/02.php?id=784"
+                                  },
+                                  {
+                                  "id": 163,
+                                  "type": "その他（種苗店）",
+                                  "name": "たねや（有限会社遠藤種苗店）",
+                                  "lat": "37.39569999",
+                                  "lon": "140.3704879",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 164,
+                                  "type": "その他（八百屋）",
+                                  "name": "八百屋さん",
+                                  "lat": "37.39567549",
+                                  "lon": "140.3708781",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 165,
+                                  "type": "その他（商店）",
+                                  "name": "熊田屋商店",
+                                  "lat": "37.39565311",
+                                  "lon": "140.3714696",
+                                  "website": "http%3A%2F%2Fwww%2Egoogle%2Eco%2Ejp%2Furl%3Fsa%3Dt%26rct%3Dj%26q%3D%26esrc%3Ds%26source%3Dweb%26cd%3D1%26ved%3D0CB8QFjAA%26url%3Dhttp%253A%252F%252Fwww%2Ecity%2Ekoriyama%2Efukushima%2Ejp%252F271000%252Fkogyo%252Fdocuments%252F07kumadaya%2Epdf%26ei%3DPpwnVIGWMcf18QWfmoHIBg%26usg%3DAFQjCNEBtlVX0Zqd564J4RmlpD5rm196Dw%26sig2%3DvsP7lgWma8N909oYaZGZNQ"
+                                  },
+                                  {
+                                  "id": 166,
+                                  "type": "美容室",
+                                  "name": "ひより理容・美容",
+                                  "lat": "37.39565525",
+                                  "lon": "140.3715433",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 167,
+                                  "type": "居酒屋",
+                                  "name": "ばん焼　ぼるが",
+                                  "lat": "37.39633554",
+                                  "lon": "140.3718404",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7007395/"
+                                  },
+                                  {
+                                  "id": 168,
+                                  "type": "病院",
+                                  "name": "あべ歯科矯正クリニック",
+                                  "lat": "37.39929755",
+                                  "lon": "140.370592",
+                                  "website": "http://abe-kyouseishika.jp/"
+                                  },
+                                  {
+                                  "id": 169,
+                                  "type": "美容室",
+                                  "name": "nature style",
+                                  "lat": "37.4016925",
+                                  "lon": "140.3527843",
+                                  "website": "http://nature-style.net/"
+                                  },
+                                  {
+                                  "id": 170,
+                                  "type": "寿司、定食・食堂",
+                                  "name": "小波",
+                                  "lat": "37.40525572",
+                                  "lon": "140.3616279",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7003292/#title-rstdata"
+                                  },
+                                  {
+                                  "id": 171,
+                                  "type": "らーめん屋",
+                                  "name": "みんなのうた",
+                                  "lat": "37.40770378",
+                                  "lon": "140.365045",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7000154/"
+                                  },
+                                  {
+                                  "id": 172,
+                                  "type": "居酒屋",
+                                  "name": "想庵",
+                                  "lat": "37.40604618",
+                                  "lon": "140.3632453",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 173,
+                                  "type": "コンビニエンスストア",
+                                  "name": "ローソン",
+                                  "lat": "37.40632529",
+                                  "lon": "140.3622743",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 174,
+                                  "type": "ファミリーレストラン",
+                                  "name": "デニーズ",
+                                  "lat": "37.40590556",
+                                  "lon": "140.3622877",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 175,
+                                  "type": "スイーツ",
+                                  "name": "ジェラートショップカザロ",
+                                  "lat": "37.40456112",
+                                  "lon": "140.3607186",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7001918/"
+                                  },
+                                  {
+                                  "id": 176,
+                                  "type": "居酒屋",
+                                  "name": "田DEN",
+                                  "lat": "37.40285765",
+                                  "lon": "140.3610365",
+                                  "website": ""
+                                  },
+                                  {
+                                  "id": 177,
+                                  "type": "飲食店",
+                                  "name": "飲み食い処 ねこ亭",
+                                  "lat": "37.4009828",
+                                  "lon": "140.3591846",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7008092/"
+                                  },
+                                  {
+                                  "id": 178,
+                                  "type": "居酒屋",
+                                  "name": "食彩 魚のもり",
+                                  "lat": "37.40216298",
+                                  "lon": "140.359932",
+                                  "website": "http://www.hotpepper.jp/strJ000032007/"
+                                  },
+                                  {
+                                  "id": 179,
+                                  "type": "その他(雑貨)",
+                                  "name": "生活雑貨のセレクトショップ hina",
+                                  "lat": "37.40456199",
+                                  "lon": "140.3578147",
+                                  "website": "http://s-hina.com/"
+                                  },
+                                  {
+                                  "id": 180,
+                                  "type": "飲食店",
+                                  "name": "食事処 松しま",
+                                  "lat": "37.40295318",
+                                  "lon": "140.3593444",
+                                  "website": "http://www.hotpepper.jp/strJ000299479/"
+                                  },
+                                  {
+                                  "id": 181,
+                                  "type": "居酒屋",
+                                  "name": "朝日食堂",
+                                  "lat": "37.4038547",
+                                  "lon": "140.3594056",
+                                  "website": "http://www.hotpepper.jp/strJ000749108/"
+                                  },
+                                  {
+                                  "id": 182,
+                                  "type": "飲食店",
+                                  "name": "海鮮炭火焼 なごみや",
+                                  "lat": "37.40365515",
+                                  "lon": "140.3595007",
+                                  "website": "http://www.hotpepper.jp/strJ000757919/"
+                                  },
+                                  {
+                                  "id": 183,
+                                  "type": "飲食店",
+                                  "name": "麺屋 大須賀",
+                                  "lat": "37.40372086",
+                                  "lon": "140.359469",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7001341/"
+                                  },
+                                  {
+                                  "id": 184,
+                                  "type": "飲食店",
+                                  "name": "とんかつ なには",
+                                  "lat": "37.40375541",
+                                  "lon": "140.3586878",
+                                  "website": "https%3A%2F%2Fwww%2Efacebook%2Ecom%2Fpages%2F%25E3%2581%25A8%25E3%2582%2593%25E3%2581%258B%25E3%2581%25A4%2D%25E3%2581%25AA%25E3%2581%25AB%25E3%2581%25AF%2F145068912279399"
+                                  },
+                                  {
+                                  "id": 185,
+                                  "type": "飲食店",
+                                  "name": "もうもう亭",
+                                  "lat": "37.40657538",
+                                  "lon": "140.3593322",
+                                  "website": "http://www.moumoutei.com/"
+                                  },
+                                  {
+                                  "id": 186,
+                                  "type": "飲食店",
+                                  "name": "歌舞伎寿司",
+                                  "lat": "37.40608608",
+                                  "lon": "140.3594087",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7003188/"
+                                  },
+                                  {
+                                  "id": 187,
+                                  "type": "飲食店",
+                                  "name": "天麩羅 奈良木",
+                                  "lat": "37.40506282",
+                                  "lon": "140.3597152",
+                                  "website": "http://www.fukulabo.net/shop/shop.shtml?s=356"
+                                  },
+                                  {
+                                  "id": 188,
+                                  "type": "飲食店",
+                                  "name": "立ちそば 天玉や",
+                                  "lat": "37.40492435",
+                                  "lon": "140.3597351",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7002220/"
+                                  },
+                                  {
+                                  "id": 189,
+                                  "type": "飲食店",
+                                  "name": "新かつ 四ツ蔵",
+                                  "lat": "37.40481782",
+                                  "lon": "140.3597887",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7008810/"
+                                  },
+                                  {
+                                  "id": 190,
+                                  "type": "居酒屋",
+                                  "name": "四季彩館 仁",
+                                  "lat": "37.40336431",
+                                  "lon": "140.3601125",
+                                  "website": "http://www.shikisaikan-jin.jp/"
+                                  },
+                                  {
+                                  "id": 191,
+                                  "type": "菓子店",
+                                  "name": "SURPRISE",
+                                  "lat": "37.40337207",
+                                  "lon": "140.3600649",
+                                  "website": "http://tadafuku.com/shop/surprise/"
+                                  },
+                                  {
+                                  "id": 192,
+                                  "type": "飲食店 居酒屋",
+                                  "name": "光華",
+                                  "lat": "37.40292626",
+                                  "lon": "140.3602215",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7010981/"
+                                  },
+                                  {
+                                  "id": 193,
+                                  "type": "飲食店",
+                                  "name": "茶処 あさひ庭園",
+                                  "lat": "37.40156591",
+                                  "lon": "140.3606598",
+                                  "website": "http://r.gnavi.co.jp/7su9jz490000/"
+                                  },
+                                  {
+                                  "id": 194,
+                                  "type": "飲食店",
+                                  "name": "大衆ふじ食堂",
+                                  "lat": "37.40140521",
+                                  "lon": "140.3607128",
+                                  "website": "http://tabelog.com/fukushima/A0702/A070201/7007387/"
+                                  },
+                                  {
+                                  "id": 195,
+                                  "type": "美容室",
+                                  "name": "M  Crop",
+                                  "lat": "37.40125086",
+                                  "lon": "140.3606116",
+                                  "website": "http://beauty.hotpepper.jp/slnH000150046/"
+                                  }
+                                  ]
+                                 ));
+                              });
+                            </script>
+    </head>
+    <body role="document">
+        <!-- ヘッダー
+         =================================================================== -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#koriyama-handson-navbar">
+                        <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">code for koriyama</a>
+                </div>
+                <div id="koriyama-handson-navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav"></ul>
+                </div>
+            </div>
+        </nav>
+        <!-- メインの作業エリア
+         =================================================================== -->
+        <div class="container">
+            <div id="map" style="position: fixed; top: 75px; bottom: 0; left: 0; right: 0; margin: auto !important; width: 100%; height: 100%;"></div>
+        </div>
+        <!--
+         =================================================================== -->
+    </body>
+</html>

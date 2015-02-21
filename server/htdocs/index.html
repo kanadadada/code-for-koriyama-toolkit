@@ -1,4 +1,85 @@
-<!doctype html>
+pe html>
+<html lang="ja">
+<head>
+  <meta charset="utf8">
+  <title>Hands-on! - code for koriyama</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+  <style>
+  body { padding-top: 70px; padding-bottom: 30px; }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+</head>
+<body role="document">
+  <!-- ヘッダー
+  =================================================================== -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#koriyama-handson-navbar">
+          <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">code for koriyama</a>
+      </div>
+      <div id="koriyama-handson-navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav"></ul>
+      </div>
+    </div>
+  </nav>
+  <!-- メインの作業エリア
+  =================================================================== -->
+  <div class="container">
+    <div class="jumbotron">
+      <button 
+        type = "button"
+        class = "btn btn-default"
+        data-action = "current-position"
+      >位置情報を取得する</button>
+      <script>
+      $(function () {
+        $("[data-action=current-position]")
+          .on("click", function () {
+            navigation.geolocation.setCurrentPosition(
+              function (position) {
+                alert(
+                  '緯度：' +position.coords, latitude+ ','
+                  '軽度：' +position.coords, longitude
+                );
+
+                var map = new OpenLayers.Map("map");
+                map.addLayer(new OpenLayers.Layer.OSM());
+
+                var lonlat = new OpenLayers.Lonlat(
+                  position.coords, longitude,
+                  position.coords, latitude
+                ). transform(
+                  new OpenLayers.Projection("EPSG:4326"),
+                  new OpenLayers.Projection("EPSG:900913")
+                );
+
+                map. setCenter(lonlat, 18);
+              },
+              function () {
+                alert('エラーが起きたよ')
+              },
+              {
+                enableHighAccuracy: true,
+                timeout 60 * 1000;
+                maximuｍAge: 0
+              }
+            );
+        });
+      });
+      </script>
+    </div>
+  </div>
+  <!--
+  =================================================================== -->
+</body>
+</html>
+ype html>
 <html lang="ja">
 <head>
   <meta charset="utf8">

@@ -44,12 +44,25 @@
             navigation.geolocation.setCurrentPosition(
               function (position) {
                 alert(
-                  '緯度：'+position.coords. latitude+','
-                  '軽度：'+position.coords. longitude
+                  '緯度：'+position.coords, latitude+','
+                  '軽度：'+position.coords, longitude
                 );
+
+                var map = new OpenLayers.Map("map");
+                map.addLayer(new OpenLayers.Layer.OSM());
+
+                var lonlat = new OpenLayers.Lonlat(
+                  position.coords, longitude,
+                  position.coords, latitude
+                ). transform(
+                  new OpenLayers.Projection("EPSG:4326"),
+                  new OpenLayers.Projection("EPSG:900913")
+                );
+
+                map. setCenter(lonlat, 18);
               },
               function () {
-                alert('エラーが起きたよ');
+                alert('エラーが起きたよ')
               },
               {
                 enableHighAccuracy: true,

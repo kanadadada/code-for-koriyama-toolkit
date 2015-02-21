@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -27,6 +26,9 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new WebViewFragment())
                     .commit();
         }
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
     }
 
     @Override
@@ -65,22 +67,21 @@ public class MainActivity extends ActionBarActivity {
             webView = (WebView) rootView.findViewById(R.id.webview);
             webView.loadUrl("file:///android_asset/html/lesson-4.html");
 
-
-            // etc...
+            // scroll
             webView.setVerticalScrollbarOverlay(true);
             webView.setVerticalScrollBarEnabled(false);
+
+            // settings
             webView.getSettings().setUseWideViewPort(true);
             webView.getSettings().setLoadWithOverviewMode(true);
             webView.getSettings().setBuiltInZoomControls(false);
             webView.getSettings().setSupportZoom(false);
             webView.getSettings().setGeolocationEnabled(true);
             webView.getSettings().setJavaScriptEnabled(true);
-
-            // cache
             webView.getSettings().setAppCacheEnabled(true);
 
+            // client
             webView.setWebViewClient(new WebViewClient());
-
             webView.setWebChromeClient(new WebChromeClient(){
                 @Override
                 public void onGeolocationPermissionsShowPrompt(
@@ -89,7 +90,6 @@ public class MainActivity extends ActionBarActivity {
                     callback.invoke(origin, true, false);
                 }
             });
-
 
             return rootView;
         }

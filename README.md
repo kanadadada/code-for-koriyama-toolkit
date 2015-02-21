@@ -32,3 +32,8 @@ npm start
 - [OpenLayers 3](http://openlayers.org/)
 
 ## native sample
+
+Android, iOS 側ネイティブサンプルアプリ
+- android-koriyama
+- ios-koriyama
+

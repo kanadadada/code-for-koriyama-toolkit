@@ -113,10 +113,47 @@ ype html>
   =================================================================== -->
   <div class="container">
     <div class="jumbotron">
-      <h1>Welcome!</h1>
-      <p>ようこそ、code for koriyamaへ。</p>
-      <p>この画面が表示されたということは、サーバが正常に起動しているということです。</p>
-      <p>さあ、アプリケーションを作りましょう！</p>
+      <button 
+        type = "button"
+        class = "btn btn-default"
+        data-action = "current-position"
+        >位置情報を取得する</button>
+      <script>
+      $(function () {
+        $("[data-action=current-position]")
+          .on("click", function () {
+            navigation.geolocation.setCurrentPosition(
+              function (position) {
+                alert(
+                  '緯度：'+position.coords, latitude+','
+                  '軽度：'+position.coords, longitude
+                );
+
+                var map = new OpenLayers.Map("map");
+                map.addLayer(new OpenLayers.Layer.OSM());
+
+                var lonlat = new OpenLayers.Lonlat(
+                  position.coords, longitude,
+                  position.coords, latitude
+                ). transform(
+                  new OpenLayers.Projection("EPSG:4326"),
+                  new OpenLayers.Projection("EPSG:900913")
+                );
+
+                map. setCenter(lonlat, 18);
+              },
+              function () {
+                alert('エラーが起きたよ')
+              },
+              {
+                enableHighAccuracy: true,
+                timeout 60 * 1000;
+                maximuｍAge: 0
+              }
+            );
+        });
+      });
+      </script>
     </div>
   </div>
   <!--
